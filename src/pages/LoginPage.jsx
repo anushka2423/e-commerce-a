@@ -6,43 +6,34 @@ import {
   EyeInvisibleOutlined,
   EyeTwoTone,
 } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Typography, Alert } from "antd";
 import axios from "axios";
 import { login } from "../redux/slices/userSlice/userSlice";
+import { useNavigate } from "react-router-dom";
 
-// Form layout configuration
-const formLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
-// Form validation messages
-const validationMessages = {
-  required: "This field is required!",
-  types: {
-    text: "Please enter a valid email!",
-  },
-};
+const { Title } = Typography;
 
 // Component styles
 const styles = {
   container: {
-    width: "400px",
-    margin: "20vh auto",
-    padding: "20px",
-    backgroundColor: "white",
-    boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
-    borderRadius: "10px",
+    maxWidth: "400px",
+    margin: "10vh auto",
+    padding: "30px",
+    backgroundColor: "#fff",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+    borderRadius: "8px",
+    textAlign: "center",
   },
   title: {
-    fontWeight: "bold",
     marginBottom: "20px",
-    textAlign: "center",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
   },
   error: {
-    color: "red",
-    marginTop: "10px",
-    textAlign: "center",
+    marginBottom: "15px",
   },
 };
 
@@ -52,72 +43,75 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Handle form submission
-  const handleFormSubmit = async (formValues) => {
-    console.log(formValues);
+  const handleFormSubmit = async () => {
     try {
       const response = await axios.post(
         "https://fakestoreapi.com/auth/login",
         { username, password },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("Login successful:", response.data);
+
       const { token } = response.data;
-      // Dispatch login action with username and token
       dispatch(login({ username, token }));
-
-      alert(`Hello ${username} 🎀`);
-
+      navigate("/");
+      alert(`Welcome back, ${username}🎀! 🎉`);
     } catch (error) {
-      console.error("Login error:", error.response?.data);
-      setErrorMessage(error.response?.data?.error || "Login failed. Please try again.😔");
-      alert(errorMessage);
+      const errorMsg =
+        error.response?.data?.error || "Login failed. Please try again.";
+      setErrorMessage(errorMsg);
     }
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Login</h2>
+      <Title level={3} style={styles.title}>
+        Login
+      </Title>
+
+      {errorMessage && (
+        <Alert
+          style={styles.error}
+          message="Error"
+          description={errorMessage}
+          type="error"
+          closable
+          onClose={() => setErrorMessage("")}
+        />
+      )}
+
       <Form
-        {...formLayout}
-        name="login-form"
+        layout="vertical"
         onFinish={handleFormSubmit}
-        style={{ maxWidth: 600 }}
-        validateMessages={validationMessages}
+        style={styles.form}
+        validateMessages={{
+          required: "This field is required!",
+          types: { text: "Please enter a valid value!" },
+        }}
       >
-        {/* UserName Input */}
+        {/* Username Field */}
         <Form.Item
-          name={["user", "username"]}
-          rules={[
-            {
-              type: "text",
-              required: true,
-            },
-          ]}
+          name="username"
+          label="Username"
+          rules={[{ required: true, message: "Please enter your username!" }]}
         >
           <Input
             size="large"
-            placeholder="Enter your good name"
+            placeholder="Enter your username"
             prefix={<UserOutlined />}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={{ margin: "auto"}}
           />
         </Form.Item>
 
-        {/* Password Input */}
+        {/* Password Field */}
         <Form.Item
-          name={["user", "password"]}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: "Please enter your password!" }]}
         >
           <Input.Password
             size="large"
@@ -133,8 +127,8 @@ const LoginPage = () => {
 
         {/* Submit Button */}
         <Form.Item>
-          <Button type="primary" block htmlType="submit">
-            Submit
+          <Button type="primary" size="large" block htmlType="submit">
+            Log In
           </Button>
         </Form.Item>
       </Form>

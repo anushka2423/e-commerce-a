@@ -1,6 +1,8 @@
-import React from 'react';
-import { Col, Card, Button } from 'antd';
+import React, { useState } from 'react';
+import { Col, Card, Button, Alert } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addtoCart } from '../redux/slices/cartSlice/cartSlice';
 
 const { Meta } = Card;
 
@@ -8,10 +10,11 @@ const { Meta } = Card;
 const styles = {
     container: { 
         padding: '8px 0'
+        
     },
     card: { 
-        width: 250, 
-        paddingInline: '0 10px',
+        // width: , 
+        paddingInline: '10px 10px',
         display: 'flex',
         flexDirection: 'column',
         gap: '10px'
@@ -30,7 +33,7 @@ const styles = {
 };
 
 // Helper function to truncate description
-const truncateDescription = (description, wordLimit = 5) => {
+const truncate = (description, wordLimit = 5) => {
     const words = description.split(' ');
     return words.length > wordLimit
         ? words.slice(0, wordLimit).join(' ') + '...'
@@ -39,7 +42,10 @@ const truncateDescription = (description, wordLimit = 5) => {
 
 // Component for rendering a single product card
 const Cards = ({ product }) => {
+    const [alertVisible, setAlertVisible] = useState(false);
+
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // Navigate to the view product page with the selected product
     const viewHandler = () => {
@@ -48,12 +54,33 @@ const Cards = ({ product }) => {
 
     // The item will dispatched to the cart
     const addTocartHandler = () => {
+        dispatch(addtoCart({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+        }));
+        console.log("Product added to cartL");
+        setAlertVisible(true);
 
+        // Hide the alert after 3 seconds
+        setTimeout(() => {
+            setAlertVisible(false);
+        }, 3000);
     };
 
     return (
-        <Col className="gutter-row" offset={2} xs={22} md={12} xl={6} key={product.id}>
+        <Col className="gutter-row" offset={1} xs={22} md={12} xl={6} key={product.id}>
             <div style={styles.container}>
+            {alertVisible && (
+                    <Alert
+                        type="success"
+                        showIcon
+                        message="Product added to cart"
+                        closable
+                        onClose={() => setAlertVisible(false)}
+                    />
+                )}
                 <Card
                     hoverable
                     style={styles.card}
@@ -67,10 +94,10 @@ const Cards = ({ product }) => {
                 >
                     <div style={styles.info}>
                         {/* Display product price and title */}
-                        <Meta title={`₹ ${product.price}`} description={product.title} />
+                        <Meta title={`₹ ${product.price}`} description={truncate(product.title, 2)} />
                         
                         {/* Display truncated description */}
-                        <Meta title={truncateDescription(product.description)} />
+                        <Meta title={truncate(product.description)} />
 
                         {/* Action buttons */}
                         <div style={styles.buttonGroup}>

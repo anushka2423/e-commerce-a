@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import {useNavigate} from 'react-router-dom'
-import { MenuOutlined, ProductOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Button, Menu } from 'antd';
+import {Link, useNavigate} from 'react-router-dom'
+import { HomeOutlined, MenuOutlined, ProductOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Button, Menu } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { setApiEndPoint } from '../redux/slices/categorySlice/apiSlice';
 import { logout } from '../redux/slices/userSlice/userSlice';
@@ -17,7 +17,12 @@ const apiEndpoints = {
 // Menu items for categories and products
 const productMenuItems = [
   {
-    label: <a href="/" rel="noopener noreferrer">Products</a>,
+    label: <Link to="/">Home</Link>,
+    key: 'home',
+    icon: <HomeOutlined />
+  },
+  {
+    label: <Link to="/product" rel="noopener noreferrer">Products</Link>,
     key: 'products',
     icon: <ProductOutlined />,
   },
@@ -33,13 +38,6 @@ const productMenuItems = [
     ],
   },
 ];
-
-// Menu items for cart
-const cartMenuItem = {
-  label: <a href="/cart" rel="noopener noreferrer">Cart</a>,
-  key: 'cart',
-  icon: <ShoppingCartOutlined />,
-};
 
 // Styles for reusable components
 const styles = {
@@ -64,6 +62,8 @@ const Navbar = () => {
   const [current, setCurrent] = useState('mail');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cart);
+  const count = cartItems.length;
 
   // Redux selectors
   const username = useSelector((state) => state.user.username);
@@ -90,13 +90,46 @@ const Navbar = () => {
   return (
     <div style={styles.container}>
       <div>hello {username}</div>
-      <Menu onClick={handleMenuClick} selectedKeys={[current]} mode="horizontal" items={productMenuItems} style={styles.menu} />
+      <Menu onClick={handleMenuClick} selectedKeys={[current]}  items={productMenuItems} style={styles.menu} />
       <div style={styles.userMenu}>
-        <Menu onClick={handleMenuClick} selectedKeys={[current]} mode="horizontal" items={[cartMenuItem]} style={{minWidth: "100px"}} />
+        <Link to="/cart" style={{ textDecoration: "none" }}>
+            <button
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+                color: "#333",
+                padding: "10px 20px",
+                cursor: "pointer",
+                fontSize: "16px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ position: "relative", display: "inline-block" }}>
+                <Badge
+                  count={count === 0 ? 0 : count}
+                  offset={[-5, 5]}
+                  style={{
+                    fontSize: "12px",
+                  }}
+                >
+                  <Avatar
+                    shape="square"
+                    icon={<ShoppingCartOutlined />}
+                    style={{
+                      backgroundColor: "transparent",
+                      color: "#333",
+                    }}
+                  />
+                </Badge>
+              </div>
+              <span style={{ marginLeft: "8px" }}>Cart</span>
+            </button>
+          </Link>
         {token ? (
           <Button onClick={handleLogout}>Logout</Button>
         ) : (
-          <Button onClick={() => navigate('/login')} type='primary'>LogIn</Button>
+          <Button style={{marginTop: "10px"}} onClick={() => navigate('/login')} type='primary'>LogIn</Button>
         )}
       </div>
   </div>

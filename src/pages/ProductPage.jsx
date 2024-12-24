@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 const ProductPage = () => {
   // Retrieve the API endpoint from the Redux store
   const apiEndPoint = useSelector((state) => state.api.apiEndPoint);
+  console.log(apiEndPoint);
 
   // Centralized styling
   const styles = {
@@ -21,8 +22,8 @@ const ProductPage = () => {
       {apiEndPoint ? (
         <ProductCard api={apiEndPoint} />
       ) : (
-        <div>Loading products...</div>
-      )}
+        <div style={{fontSize: '40px'}}> Not Found 404 😥</div>
+      )} 
     </div>
   );
 };

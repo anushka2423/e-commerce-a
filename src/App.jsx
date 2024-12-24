@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom"
 import ViewProductPage from "./pages/ViewProductPage"
 import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/LoginPage"
+import HomePage from "./pages/HomePage"
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
     <div style={{width: "100vw"}}>
       <Navbar/>
       <Routes>
-            <Route path="/" element={<ProductPage/>} />
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/product" element={<ProductPage/>} />
             <Route path="/view-product" element={<ViewProductPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
