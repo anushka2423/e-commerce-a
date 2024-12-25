@@ -1,8 +1,16 @@
-# React + Vite
+# E-Commerce App  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is built using **React.js**, **Redux Toolkit**, and **Redux Persist**. We aim to provide a smooth user experience with features like filtering, searching, and authentication.  
 
-Currently, two official plugins are available:
+## Features of the Application  
+- **Filter by Price**: Sort products in ascending (low-high) or descending (high-low) order.  
+- **Category Selection**: Choose products from different categories.  
+- **Search Functionality**: Search for products based on categories or keywords.  
+- **Pagination**: Navigate through products for better user experience.  
+- **Authentication**: Login and logout functionality for a personalized experience.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Setting Up the Project  
+1. Fork the repository from [GitHub].  
+2. Clone the forked repository to your local system:  
+   ```bash  
+   git clone https://github.com/anushka2423/e-commerce-a  
