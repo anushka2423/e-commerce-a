@@ -6,7 +6,7 @@ import HeroCard from "./HeroCard";
 const HeroSection = () => {
   const [products, setProducts] = useState([]);
 
-  const random = Math.floor(Math.random() * 6);
+  const random = Math.floor(Math.random() * 3);
 
   // Function to select random products
   const getRandomProducts = async () => {

@@ -70,7 +70,7 @@ const Cards = ({ product }) => {
     };
 
     return (
-        <Col className="gutter-row" offset={1} xs={22} md={12} xl={6} key={product.id}>
+        <Col className="gutter-row" offset={1} xs={22} md={12} xl={7} key={product.id}>
             <div style={styles.container}>
             {alertVisible && (
                     <Alert

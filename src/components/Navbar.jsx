@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom'
-import { HomeOutlined, MenuOutlined, ProductOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { FilterOutlined, HomeOutlined, MenuOutlined, ProductOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Button, Menu } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { setApiEndPoint } from '../redux/slices/categorySlice/apiSlice';
@@ -37,6 +37,15 @@ const productMenuItems = [
       { label: 'Jewelery', key: 'jewelery' },
     ],
   },
+  {
+    label: 'Filter',
+    key: 'filter',
+    icon: <FilterOutlined />,
+    children: [
+      {label: 'low to high', key: 'asc'},
+      {label: 'high to low', key: 'desc'},
+    ]
+  }
 ];
 
 // Styles for reusable components
@@ -74,8 +83,13 @@ const Navbar = () => {
     console.log('Menu clicked:', e);
     setCurrent(e.key);
 
-    // Dispatch API endpoint update if the key exists in apiEndpoints
-    if (apiEndpoints[e.key]) {
+    if (e.key === 'asc') {
+      // Dispatch the filter action
+      dispatch(setApiEndPoint('https://fakestoreapi.com/products?sort=asc'));
+    }else if(e.key === 'desc') {
+      dispatch(setApiEndPoint('https://fakestoreapi.com/products?sort=desc'));
+    } else if (apiEndpoints[e.key]) {
+      // Dispatch API endpoint update if the key exists in apiEndpoints
       dispatch(setApiEndPoint(apiEndpoints[e.key]));
     }
   };
@@ -84,6 +98,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
     setCurrent('');
+    navigate('/login');
     alert('Logged out successfully!');
   };
 
@@ -127,7 +142,7 @@ const Navbar = () => {
             </button>
           </Link>
         {token ? (
-          <Button onClick={handleLogout}>Logout</Button>
+          <Button style={{marginTop: "10px"}} onClick={handleLogout}>Logout</Button>
         ) : (
           <Button style={{marginTop: "10px"}} onClick={() => navigate('/login')} type='primary'>LogIn</Button>
         )}

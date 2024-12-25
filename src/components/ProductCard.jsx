@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Row } from 'antd';
+import { Pagination, Row } from 'antd';
 import Card from './Card';
 import axios from 'axios';
 
 const ProductCard = ({ api }) => {
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
+  const itemsPerPage = 5;
 
   // Fetch products from the given API
   const fetchProducts = async () => {
@@ -23,6 +25,12 @@ const ProductCard = ({ api }) => {
     fetchProducts();
   }, [api]);
 
+  // Calculate products for the current page
+  const paginatedProducts = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div>
       {error ? (
@@ -38,11 +46,22 @@ const ProductCard = ({ api }) => {
             lg: 32,
           }}
         >
-          {products.map((product) => (
+          {paginatedProducts.map((product) => (
             <Card key={product.id} product={product} />
           ))}
         </Row>
       )}
+
+      {/* Pagination */}
+      <Pagination
+        current={currentPage}
+        onChange={(page) => setCurrentPage(page)}
+        total={products.length}
+        pageSize={itemsPerPage}
+        showSizeChanger={false}
+        align='center'
+        style={{marginBlock: '20px'}}
+      />
     </div>
   );
 };
